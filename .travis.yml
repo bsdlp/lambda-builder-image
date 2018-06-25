@@ -1,0 +1,28 @@
+before_script:
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+after_success:
+- "/bin/bash ./scripts/send.sh success $DISCORD_BUILD_STATUS_WEBHOOK_URL"
+after_failure:
+- "/bin/bash ./scripts/send.sh failure $DISCORD_BUILD_STATUS_WEBHOOK_URL"
+notifications:
+  email: false
+language: bash
+services:
+- docker
+jobs:
+  include:
+  - stage: build
+    script: make build
+  - stage: deploy_commit
+    script: make deploy_commit
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: make deploy_latest
+  on:
+    branch: master
+env:
+  matrix:
+  - secure: usrvfTsKuO5ct+3AoJlJYPzsOyBEhFeohoVgCVLIhHjS1OMFZbPmUGOQGm0ktJHi9RUd7hi3tsSqyXu0DhgPXzJKtCLY/sEuioRyes1rcVM1cJfljTvBcyhia8K9jDS8Y0IdE4Cq7SWsFEi/Fg1vKb9EwXdhxwW3j0Cmx4sNrXkFoWriXQSbGhVc5o05PnTMljkSSWAO4Z+S8k+lS+iSka1bjMu022Z28mTG9yWdP/Z12ydaa9w3ACjwE2b+Zbdi9JYo49oRlP0kTdpEPmHrJKreIXk4nDmExHGbcw5QjLukdsIK0YgNfPQhqQMOXP8G9XGqTApAkaaFcVvjfx40nEekObusgPEqLGVnpDFGpaM5s3/yCAgSm+2m5ET2CprQ66O/ek0gjDeamYE/vk0INleT72U5IwGat/U8uEzuwHKF+EiXDNCURkzrPI/WDUdYwxd+2IlYO296Sui2AOkF8ne6+e8J/qAXwEPEvDAMgcGzEIf6T3wkPjWpi8wKbLtBMj376x/9XKdk2x8XHw4ddgnd2Dl9yn+7xcfKHXFhms7mcNA56GrJaOhfVrLkc1Xu++x88CrGoLLJBi+N70mPeV9e7A/4r7+y7tRsXoX3kO3ugzHFtsTtbP7mVAHvbi/dL8qawOUCoE7BKI8vJPGE3VG9xq8rNGGoKDM+QD0d9OQ=
+  - secure: A7FVII0LsvHwbz+tB5JGaYtjuM69kPhlKIGvsHwT4yx05nVdZzLx/P//bz15tmPTEubfufJOWviQfR9F4NtND06TLCUwxPPUEKFI7sCMVdIuoO/HxOwvpR/2te+gMnWfJS76pkUz8RdhlUfHBAQdBUR1kayCV3rUlS+MFyWJjEWRn4OYJwlOfGRikIq/9cOZ9WSBwXlJHZO+sB+6UwmMLaZxhC+/ZYOCa9wT52vZccvfLJ/lMQj/p0PgpU0joSk+04GzeFG9YxBYoQ90mKlA1sHQPgjHo9FSYYaP9Tens2PL56O9yXhE4+ciKLgk7ZMG85uAF2ofh+AMpxq0C1/oKx9/50tCa7v9U9O1k9vQ78jCGTcuLOEgdBkcViSGFc7tFDY8UINxu796ETbGscaZhdZPPRWPZIneOM7vTNo1oHeeCntUfIM2nZT2vC0h/r8GERsRrl6jIZenEYssastkOWlX08avqYFx3nIO95I7JEkKAU/Av9uqVaYOtDJ3SaoK9dTBtoZMMTkMrpkkkgIIw1A7mbLQx0viV+tx+UVcw2+ZarIxhm4at+n5xC9pJZ1pkmX/8HWmrNr6ZUufjA54y3EBcNfoMOTQf/zt4am+wcZWp3DI4iXL8DC2ZjsMt0vGRysM3IoWWlJRAR3Zctow1iMTKlMgyku/Q06lZ9BumWE=
+  - secure: YOF5tSY7MZdE3/QULpDGCUd3n/5o5qFVavoLvKYt4UsiVgdYgaQaFMuxZXjOGqaxJTT+xykXmL/ifcKO8h3G0RECeW/loBwwZg1bw8uYB8Lqdj0OKsR1h1lnc72N+BO6C7HcbWP/zK4ummt7RZBf5pTPllYFz/Bs43TfVftTDyTxmt9y9kIOYeMDAKZeUPj48WsZCHtNmc58T3lhiPo+VYx4DMveMCw46ixlAiUsve721tda/kh5D9k8e4rFw2WQbzCNPjup5OWTLw4vQSkSzWihys5x020KJyxvRB2A7Yena/s5vH2EMyCaELzdTQMCbhms0ogqR6xqWjnbqLR+mfZAozUbNFJoTfigaEmNzK9Nsydj4USWoQzi0X3DYVPxzIi+vuUgldT9gSnQiUefbzgIIoOrgxo8WRLEEvXfUTW5bDPENGPmwSBiw526hcj/zNgpNqUox4Aq9DvBvS7zUKGr/D2/tZoXJSCqTchGu0JITw4TnmDfOS2+VTnibiTgcukIH4nfdGwyv0/dk7EJkeKpZ6h+IgVed/AmTrMxUIyNPLgvkWCgSy68+3YIa1Ka7m/+h1gUbVzXeycG2MeDlkYP6mDVNKu3Z7jBoyQhuNUA+cOdDn3XyxrauxCWZTfBOTUSHYzGX0sTOweIsIZn1prv2caG0FzdR+HeW+zGZto=
