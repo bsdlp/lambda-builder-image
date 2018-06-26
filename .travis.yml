@@ -14,9 +14,9 @@ services:
 jobs:
   include:
   - stage: build
-    script: make build
-  - stage: deploy_commit
-    script: make deploy_commit
+    script:
+    - make build
+    - make deploy_commit
 deploy:
   skip_cleanup: true
   provider: script
