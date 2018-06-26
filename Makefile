@@ -1,5 +1,5 @@
-img-name: bsdlp/lambda-builder
-img-commit: $(img-name):$(TRAVIS_COMMIT)
+img-name = bsdlp/lambda-builder
+img-commit = $(img-name):$(TRAVIS_COMMIT)
 
 build:
 	docker build -t $(img-commit) - < $(CURDIR)/Dockerfile
